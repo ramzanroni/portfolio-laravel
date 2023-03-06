@@ -8,6 +8,7 @@ use App\Models\MultiImage;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Image;
+use PhpParser\Parser\Multiple;
 
 class AboutController extends Controller
 {
@@ -69,7 +70,7 @@ class AboutController extends Controller
 
     public function store_multiImage(Request $request)
     {
-        $images=$request->file('about_image');
+        $images = $request->file('about_image');
         foreach ($images as $multiImage) {
             $aboutImg_name = hexdec(uniqid()) . '.' . $multiImage->getClientOriginalExtension();
             Image::make($multiImage)
@@ -78,9 +79,8 @@ class AboutController extends Controller
             $save_url = 'upload/multi_images/' . $aboutImg_name;
             MultiImage::insert([
                 'multi_image' => $save_url,
-                'created_at'=> Carbon::now(),
+                'created_at' => Carbon::now(),
             ]);
-           
         }
         $notification = [
             'message' => 'About Information & Image Update Successfully',
@@ -93,7 +93,58 @@ class AboutController extends Controller
 
     public function allMultiImage()
     {
-        $allMultiImage=MultiImage::all();
+        $allMultiImage = MultiImage::all();
         return view('admin.about.allMultiImage', compact('allMultiImage'));
+    }
+    public function editMultiImage($id)
+    {
+        $multiImageData = MultiImage::findOrFail($id);
+        return view('admin.about.edit_multi_image', compact('multiImageData'));
+    }
+    public function updateMultiImage(Request $request)
+    {
+        $updateId = $request->id;
+        if ($request->file('about_image')) {
+            $image = $request->file('about_image');
+            $updateMultiImageName = hexdec(uniqid()) . '.' . $image->getClientOriginalExtension();
+            Image::make($image)
+                ->resize(220, 220)
+                ->save('upload/multi_images/' . $updateMultiImageName);
+            $save_url = 'upload/multi_images/' . $updateMultiImageName;
+            MultiImage::findOrFail($updateId)->update([
+                'multi_image' => $save_url,
+                'updated_at' => Carbon::now(),
+            ]);
+            $notification = [
+                'message' => 'Multiple Image Update Successfully',
+                'alert-type' => 'success',
+            ];
+            return redirect()
+                ->route('about.all.multiimage')
+                ->with($notification);
+        } else {
+            $notification = [
+                'message' => 'Image Field Cannot be Null or Empty',
+                'alert-type' => 'error',
+            ];
+            return redirect()
+                ->back()
+                ->with($notification);
+        }
+    }
+
+    public function deleteMultiImage($deleteId)
+    {
+        $deleteData = MultiImage::findOrFail($deleteId);
+        $imageURL = $deleteData->multi_image;
+        unlink($imageURL);
+        MultiImage::findOrFail($deleteId)->delete();
+        $notification = [
+            'message' => 'Image Delete Success',
+            'alert-type' => 'success',
+        ];
+        return redirect()
+            ->back()
+            ->with($notification);
     }
 }

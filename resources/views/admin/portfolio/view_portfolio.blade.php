@@ -7,12 +7,12 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1 class="m-0">View Multiple Image</h1>
+                    <h1 class="m-0">View Portfolio</h1>
                 </div><!-- /.col -->
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Home</a></li>
-                        <li class="breadcrumb-item active">View Multiple Image</li>
+                        <li class="breadcrumb-item active">View Portfolio</li>
                     </ol>
                 </div><!-- /.col -->
             </div><!-- /.row -->
@@ -25,7 +25,7 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-header">
-                            <h5 class="m-0"><span style="float:left;"> Add Multiple Image </span><span style="float:right;"> <a href="{{ route('about.multiimage') }}" class="btn btn-primary">Add Multiple Image</a></span></h5>
+                            <h5 class="m-0"><span style="float:left;"> View Portfolio </span><span style="float:right;"> <a href="{{ route('portfolio.add_portfolio') }}" class="btn btn-primary">Add Portfolio</a></span></h5>
                         </div>
                         <!-- /.card-header -->
                         <div class="card-body">
@@ -33,7 +33,9 @@
                                 <thead>
                                     <tr>
                                         <th>SL</th>
-                                        <th>Image</th>
+                                        <th>Portfolio Name</th>
+                                        <th>Portfolio Title</th>
+                                        <th>Portfolio Image</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -41,16 +43,19 @@
                                     @php
                                         $i = 1;
                                     @endphp
-                                    @foreach ($allMultiImage as $image)
+                                    @foreach ($portfolioes as $portfolio)
                                         <tr>
                                             <td>{{ $i++ }}</td>
-                                            <td><img src="{{ url($image['multi_image']) }}" alt=""
+                                            <td>{{ $portfolio->portfolio_name }}</td>
+                                            <td>{{ $portfolio->portfolio_title }}</td>
+                                            <td>{{ $portfolio->portfolio_image }}</td>
+                                            <td><img src="{{ url($portfolio['portfolio_image']) }}" alt=""
                                                     style="width: 60px; heigth: 60px;"> </td>
                                             <td>
-                                                <a href="{{ route('edit.multiImage', $image->id) }}" title="Edit Image" class="btn btn-info m-1 btn-xs"><i
+                                                <a href="{{ route('edit.portfolio', $portfolio->id) }}" title="Edit Portfolio" class="btn btn-info m-1 btn-xs"><i
                                                         class="fa-solid fa-file-pen"></i>
                                                 </a>
-                                                <a href="{{ route('delete.multiImage', $image->id) }}" id="delete" title="Delete Image" class="btn btn-danger btn-xs m-1"><i
+                                                <a href="{{ route('delete.portfolio', $portfolio->id) }}" id="delete" title="Delete Portfolio" class="btn btn-danger btn-xs m-1"><i
                                                         class="fa-solid fa-trash"></i></a>
                                             </td>
                                         </tr>

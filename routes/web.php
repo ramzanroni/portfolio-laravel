@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\Home\HomeSliderController;
 use App\Http\Controllers\About\AboutController;
+use App\Http\Controllers\Home\PortfolioController;
 use App\Models\About;
 use App\Models\MultiImage;
 
@@ -31,9 +32,16 @@ Route::controller(AboutController::class)->group(function(){
     Route::get('/about/multiimage', 'aboutMultiimage')->name('about.multiimage');
     Route::post('/about/store_multiImage', 'store_multiImage')->name('store.multiImg');
     Route::get('/about/view-multiple-image', 'allMultiImage')->name('about.all.multiimage');
+    Route::get('/about/edit-multi-image/{id}', 'editMultiImage')->name('edit.multiImage');
+    Route::post('/about/update-multi-image', 'updateMultiImage')->name('update.multiImg');
+    Route::get('/about/delete-multi-image/{id}', 'deleteMultiImage')->name('delete.multiImage');
 });
 
-
+//portfolio route
+Route::controller(PortfolioController::class)->group(function(){
+    Route::get('/portfolio/view-portfolio', 'viewPortfolio')->name('portfolio.view_portfolio');
+    Route::get('/portfolio/add-portfolio', 'addPortfolio')->name('portfolio.add_portfolio');
+});
 Route::get('/dashboard', function () {
     return view('admin.index');
 })->middleware(['auth','verified'])->name('dashboard');
